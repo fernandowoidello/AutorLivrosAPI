@@ -81,31 +81,26 @@ namespace AutorLivrosAPI.Services.Autor
                 var autor = new AutorModel()
                 {
                     Nome = autorCriacaoDto.Nome,
-                    sobrenome = autorCriacaoDto.sobrenome
-
+                    Sobrenome = autorCriacaoDto.Sobrenome
                 };
                 _context.Add(autor);
                 await _context.SaveChangesAsync();
+
                 resposta.Dados = await _context.Autores.ToListAsync();
                 resposta.Mensagem = "Autor criado com sucesso!";
+
                 return resposta;
 
-                //await _context.Autores.AddAsync(novoAutor);
-                //await _context.SaveChangesAsync();
 
-                //resposta.Dados = new List<AutorModel> {novoAutor};
-                //resposta.Mensagem = "Autor criado com sucesso!";
-                //resposta.Status = true;
-
-                //return resposta;
             }
             catch (Exception ex)
             {
-
                 resposta.Mensagem = ex.Message;
                 resposta.Status = false;
                 return resposta;
             }
+
+
         }
 
         public async Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorCriacaoDto autorEdicaoDto)
@@ -114,17 +109,25 @@ namespace AutorLivrosAPI.Services.Autor
 
             try
             {
-                var autor = new AutorModel()
+                var autor = await _context.Autores.FirstOrDefaultAsync(autorBanco => autorBanco.Id == autorEdicaoDto.Id);
+
+                if (autor == null)
                 {
-                    //Id = autorEdicaoDto.Id(),
-                    Nome = autorEdicaoDto.Nome,
-                    sobrenome = autorEdicaoDto.sobrenome
-                };
+                    resposta.Mensagem = "Nenhum autor localizado!";
+                    resposta.Status = false;
+                    return resposta;
+                }
+
+                autor.Nome = autorEdicaoDto.Nome;
+                autor.Sobrenome = autorEdicaoDto.Sobrenome;
+
                 _context.Update(autor);
                 await _context.SaveChangesAsync();
+
                 resposta.Dados = await _context.Autores.ToListAsync();
-                resposta.Mensagem = "Autor Editado com sucesso!";
+                resposta.Mensagem = "Autor Editado com Sucesso!";
                 return resposta;
+
             }
             catch (Exception ex)
             {
@@ -135,10 +138,10 @@ namespace AutorLivrosAPI.Services.Autor
 
         }
 
-        public Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorEdicaoDto autorEdicaoDto)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorEdicaoDto autorEdicaoDto)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public async Task<ResponseModel<List<AutorModel>>> ExcluirAutor(int idAutor)
         {

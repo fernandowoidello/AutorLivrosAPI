@@ -2,7 +2,8 @@
 {
     public class AutorCriacaoDto
     {
-         public string Nome { get; set; }
-        public string sobrenome { get; set; }   
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Sobrenome { get; set; }   
     }
 }
