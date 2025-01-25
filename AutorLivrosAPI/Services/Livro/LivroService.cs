@@ -17,12 +17,12 @@ namespace autorlivrosapi.services.livro
 
         public async Task<ResponseModel<LivroModel>> BuscarLivroPorId(int idLivro)
         {
-
+            return null;
         }
 
-        public async Task<ResponseModel<List<LivroModel>>> BuscarLivroPorIdAutor(int idAutor)
+        public async Task<ResponseModel<LivroModel>> BuscarLivroPorIdAutor(int idAutor)
         {
-
+            return null;
         }
 
         public async Task<ResponseModel<List<LivroModel>>> CriarLivro(LivroCriacaoDto livroCriacaoDto)
@@ -61,13 +61,20 @@ namespace autorlivrosapi.services.livro
             }
         }
 
-        public async Task<ResponseModel<List<LivroModel>>> EditarLivro(LivroEdicaoDto livroEdicaoDto)
+        public async Task<ResponseModel<List<AutorModel>>> EditarLivro(LivroCriacaoDto livroEdicaoDto)
+        {
+            return null;
         }
 
-        public async Task<ResponseModel<List<LivroModel>>> ExcluirLivro(int idLivro)
+        public async Task<ResponseModel<List<AutorModel>>> ExcluirLivro(int idLivro)
+        {
+            return null;
         }
+
 
         public async Task<ResponseModel<List<LivroModel>>> ListarLivros()
+        {
+            return null;
         }
     }
 }

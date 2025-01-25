@@ -103,7 +103,7 @@ namespace AutorLivrosAPI.Services.Autor
 
         }
 
-        public async Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorCriacaoDto autorEdicaoDto)
+        public async Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorEdicaoDto autorEdicaoDto)
         {
             ResponseModel<List<AutorModel>> resposta = new ResponseModel<List<AutorModel>>();
 
@@ -119,7 +119,7 @@ namespace AutorLivrosAPI.Services.Autor
                 }
 
                 autor.Nome = autorEdicaoDto.Nome;
-                autor.Sobrenome = autorEdicaoDto.Sobrenome;
+                autor.Sobrenome = autorEdicaoDto.sobrenome;
 
                 _context.Update(autor);
                 await _context.SaveChangesAsync();
@@ -138,10 +138,6 @@ namespace AutorLivrosAPI.Services.Autor
 
         }
 
-        //public Task<ResponseModel<List<AutorModel>>> EditarAutor(AutorEdicaoDto autorEdicaoDto)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public async Task<ResponseModel<List<AutorModel>>> ExcluirAutor(int idAutor)
         {
