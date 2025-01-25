@@ -1,5 +1,7 @@
+using autorlivrosapi.services.livro;
 using AutorLivrosAPI.Data;
 using AutorLivrosAPI.Services.Autor;
+using AutorLivrosAPI.Services.Livro;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -13,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAutorInterface, AutorService>();
+builder.Services.AddScoped<ILivroInterface, LivroService>();
 
 
 // Obtém a string de conexão do arquivo de configuração.
