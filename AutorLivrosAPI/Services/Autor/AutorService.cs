@@ -50,22 +50,23 @@ namespace AutorLivrosAPI.Services.Autor
             {
                 var livro = await _context.Livros
                     .Include(a => a.Autor)
-                    .FirstOrDefaultAsync(livroBanco => livroBanco.Id == idLivro); //include acessa a model do autor para pegar as propriedades
+                    .FirstOrDefaultAsync(livroBanco => livroBanco.Id == idLivro);
 
                 if (livro == null)
                 {
-                    resposta.Mensagem = "Nenhum registro localizado !";
+                    resposta.Mensagem = "Nenhum registro localizado!";
                     return resposta;
                 }
 
                 resposta.Dados = livro.Autor;
-                resposta.Mensagem = "Autor Localizado";
+                resposta.Mensagem = "Autor localizado!";
                 return resposta;
-            }
 
+
+
+            }
             catch (Exception ex)
             {
-
                 resposta.Mensagem = ex.Message;
                 resposta.Status = false;
                 return resposta;

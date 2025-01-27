@@ -20,6 +20,31 @@ namespace AutorLivrosAPI.Controllers
             _livroInterface = livroInterface;
         }
 
+        [HttpGet("ListarLivros")]
+
+        public async Task<ActionResult<ResponseModel<LivroModel>>> ListarLivros()
+
+        {
+
+            var livros = await _livroInterface.ListarLivros();
+            return Ok (livros);
+        }
+
+        [HttpGet("BuscarLivroPorId/{idLivro}")]
+        public async Task<ActionResult<ResponseModel<List<LivroModel>>>> BuscarLivroPorId(int idLivro)
+        {
+            var autor = await _livroInterface.BuscarLivroPorId(idLivro);
+            return Ok(autor);
+        }
+
+        [HttpGet("BuscarLivroPorIdAutor/{idAutor}")]
+        public async Task<ActionResult<ResponseModel<List<LivroModel>>>> BuscarLivroPorIdAutor(int idAutor)
+        {
+            var livro = await _livroInterface.BuscarLivroPorIdAutor(idAutor);
+            return Ok(livro);
+        }
+
+     
         [HttpPost("CriarLivro")]
         public async Task<ActionResult<ResponseModel<LivroModel>>> CriarLivro(LivroCriacaoDto livroCriacaoDto)
         {
