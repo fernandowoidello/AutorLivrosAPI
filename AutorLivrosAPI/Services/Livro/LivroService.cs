@@ -100,7 +100,9 @@ namespace autorlivrosapi.services.livro
                 var livro = new LivroModel()
                 {
                     Titulo = livroCriacaoDto.Titulo,
-                    Autor = autor
+                    Autor = autor,
+                    Avaliacao = livroCriacaoDto.Avaliacao, // Adicionando Avaliação
+                    Resumo = livroCriacaoDto.Resumo // Adicionando Resumo
                 };
 
                 _context.Add(livro);
@@ -146,6 +148,8 @@ namespace autorlivrosapi.services.livro
                 // 5. Atualizar as propriedades do livro com os dados do DTO
                 livro.Titulo = livroEdicaoDto.Titulo;
                 livro.Autor = autor; // Atualiza o autor do livro
+                livro.Avaliacao = livroEdicaoDto.Avaliacao;
+                livro.Resumo = livroEdicaoDto.Resumo;
 
                 _context.Livros.Update(livro);
                 await _context.SaveChangesAsync();
