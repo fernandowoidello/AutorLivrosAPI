@@ -13,7 +13,7 @@ namespace AutorLivrosAPI.Services.Livro
 
         Task<ResponseModel<List<LivroModel>>> CriarLivro(LivroCriacaoDto livroCriacaoDto);
 
-        Task<ResponseModel<List<AutorModel>>> EditarLivro(LivroCriacaoDto livroEdicaoDto);
-        Task<ResponseModel<List<AutorModel>>> ExcluirLivro(int idLivro);
+        Task<ResponseModel<List<LivroModel>>> EditarLivro(LivroEdicaoDto livroEdicaoDto);
+        Task<ResponseModel<List<LivroModel>>> ExcluirLivro(int idLivro);
     }
 }

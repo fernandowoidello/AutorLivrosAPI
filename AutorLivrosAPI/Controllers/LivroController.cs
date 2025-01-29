@@ -51,9 +51,22 @@ namespace AutorLivrosAPI.Controllers
             var livros = await _livroInterface.CriarLivro(livroCriacaoDto);
             return Ok(livros);
         }
+
+        [HttpPut("EditarLivro")]
+        public async Task<ActionResult<ResponseModel<List<LivroModel>>>> EditarLivro(LivroEdicaoDto livroEdicaoDto)
+        {
+            var livros = await _livroInterface.EditarLivro(livroEdicaoDto);
+            return Ok(livros);
+        }
+
+
+        [HttpDelete("ExcluirLivro")]
+        public async Task<ActionResult<ResponseModel<LivroModel>>> ExcluirLivro(int idLivro)
+        {
+            var livros = await _livroInterface.ExcluirLivro(idLivro);
+            return Ok(livros);
+        }
     }
-    
-       
     
 
 }

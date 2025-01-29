@@ -1,4 +1,5 @@
 ﻿using AutorLivrosAPI.Data;
+using AutorLivrosAPI.Dto.Autor;
 using AutorLivrosAPI.Dto.Livro;
 using AutorLivrosAPI.Models;
 using AutorLivrosAPI.Services.Livro;
@@ -21,7 +22,10 @@ namespace autorlivrosapi.services.livro
 
             try
             {
-                var livro = await _context.Livros.FirstOrDefaultAsync(livroBanco => livroBanco.Id == idLivro);
+                var livro = await _context.Livros.Include(a => a.Autor)
+                   .FirstOrDefaultAsync(livroBanco => livroBanco.Id == idLivro);
+
+
                 if (livro == null)
                 {
                     resposta.Mensagem = "Nenhum registro localizado";
@@ -48,9 +52,14 @@ namespace autorlivrosapi.services.livro
             ResponseModel<List<LivroModel>> resposta = new ResponseModel<List<LivroModel>>();
             try
             {
+                //var livro = await _context.Livros
+                //    .Include(a => a.Autor)
+                //    .Where(livroBanco => livroBanco.Autor.Id == idAutor)
+                //    .ToListAsync();
+
                 var livro = await _context.Livros
-                    .Include(a => a.Autor)
-                    .Where(livroBanco => livroBanco.Autor.Id == idAutor)
+                    .Include(l => l.Autor) // Inclui o autor relacionado
+                    .Where(l => l.Autor.Id == idAutor) // Filtra pelo autor relacionado
                     .ToListAsync();
 
                 if (livro == null)
@@ -85,7 +94,6 @@ namespace autorlivrosapi.services.livro
                 if (autor == null)
                 {
                     resposta.Mensagem = "Nenhum registro de autor localizado!";
-                    resposta.Status = false; // Garantir que o status seja marcado como falso
                     return resposta;
                 }
 
@@ -99,7 +107,7 @@ namespace autorlivrosapi.services.livro
                 await _context.SaveChangesAsync();
 
                 resposta.Dados = await _context.Livros.Include(a => a.Autor).ToListAsync();
-                resposta.Mensagem = "Livro criado com sucesso!";
+                //resposta.Mensagem = "Livro criado com sucesso!";
                 return resposta;
             }
             catch (Exception ex)
@@ -110,20 +118,108 @@ namespace autorlivrosapi.services.livro
             }
         }
 
-        public async Task<ResponseModel<List<AutorModel>>> EditarLivro(LivroCriacaoDto livroEdicaoDto)
+        public async Task<ResponseModel<List<LivroModel>>> EditarLivro(LivroEdicaoDto livroEdicaoDto)
         {
-            return null;
-        }
+            ResponseModel<List<LivroModel>> resposta = new ResponseModel<List<LivroModel>>();
 
-        public async Task<ResponseModel<List<AutorModel>>> ExcluirLivro(int idLivro)
+            try
+            {
+                var livro = await _context.Livros.FirstOrDefaultAsync(livroBanco => livroBanco.Id == livroEdicaoDto.Id);
+
+                var autor = await _context.Autores.FirstOrDefaultAsync(autorBanco => autorBanco.Id == livroEdicaoDto.Autor.Id);
+
+                if (livro == null)
+
+                {
+                    resposta.Mensagem = "Nenhum registro de livro localizado!";
+                    resposta.Status = false;
+                    return resposta;
+                }
+
+                if (autor == null)
+                {
+                    resposta.Mensagem = "Nenhum registro de autor localizado!";
+                    resposta.Status = false;
+                    return resposta;
+                }
+
+                // 5. Atualizar as propriedades do livro com os dados do DTO
+                livro.Titulo = livroEdicaoDto.Titulo;
+                livro.Autor = autor; // Atualiza o autor do livro
+
+                _context.Livros.Update(livro);
+                await _context.SaveChangesAsync();
+
+                // 7. Retornar a resposta com o livro atualizado
+                resposta.Dados = await _context.Livros.ToListAsync();
+                resposta.Mensagem = "Livro editado com sucesso!";
+                resposta.Status = true;
+                return resposta;
+            }
+            catch (Exception ex)
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+
+            }
+        }
+        public async Task<ResponseModel<List<LivroModel>>> ExcluirLivro(int idLivro)
         {
-            return null;
+            ResponseModel<List<LivroModel>> resposta = new ResponseModel<List<LivroModel>>();
+
+
+            try
+            {
+
+                var livro = await _context.Livros.Include(a => a.Autor).FirstOrDefaultAsync(livroBanco => livroBanco.Id == idLivro);
+
+
+                if (livro == null)
+                {
+                    resposta.Mensagem = "Nenhum livro localizado!";
+                    return resposta;
+                }
+
+                _context.Remove(livro);
+                await _context.SaveChangesAsync();
+
+                resposta.Dados = await _context.Livros.ToListAsync();
+                resposta.Mensagem = "Livro Removido com sucesso!";
+
+                return resposta;
+
+            }
+            catch (Exception ex)
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+            }
+
         }
 
 
         public async Task<ResponseModel<List<LivroModel>>> ListarLivros()
         {
-            return null;
+            ResponseModel<List<LivroModel>> resposta = new ResponseModel<List<LivroModel>>();
+            try
+            {
+
+                var livros = await _context.Livros.Include(l => l.Autor).ToListAsync();
+
+                resposta.Dados = livros;
+                resposta.Mensagem = "Todos os livros foram coletados!";
+
+                return resposta;
+
+            }
+            catch (Exception ex)
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+            }
         }
     }
 }
