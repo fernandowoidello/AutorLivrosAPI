@@ -7,9 +7,9 @@ namespace AutorLivrosAPI.Services.Livro
 {
     public interface ILivroInterface
     {
-        Task<ResponseModel<List<LivroModel>>> ListarLivros();
-        Task<ResponseModel<LivroModel>> BuscarLivroPorId(int idLivro);
-        Task<ResponseModel<List<LivroModel>>> BuscarLivroPorIdAutor(int idAutor);
+        Task<ResponseModel<List<LivroDto>>> ListarLivros();
+        Task<ResponseModel<LivroDto>> BuscarLivroPorId(int idLivro);
+        Task<ResponseModel<List<LivroDto>>> BuscarLivroPorIdAutor(int idAutor);
 
         Task<ResponseModel<List<LivroModel>>> CriarLivro(LivroCriacaoDto livroCriacaoDto);
 

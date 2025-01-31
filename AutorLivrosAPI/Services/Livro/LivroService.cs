@@ -1,4 +1,5 @@
-﻿using AutorLivrosAPI.Data;
+﻿using AutoMapper;
+using AutorLivrosAPI.Data;
 using AutorLivrosAPI.Dto.Autor;
 using AutorLivrosAPI.Dto.Livro;
 using AutorLivrosAPI.Models;
@@ -10,15 +11,19 @@ namespace autorlivrosapi.services.livro
     public class LivroService : ILivroInterface
     {
         private readonly AppDbContext _context; //propriedade
-        public LivroService(AppDbContext context)
+        private readonly IMapper _mapper;
+
+
+        public LivroService(AppDbContext context, IMapper mapper)
         {
             _context = context; //propriedade recebe o context(banco)
+            _mapper = mapper;
 
         }
 
-        public async Task<ResponseModel<LivroModel>> BuscarLivroPorId(int idLivro)
+        public async Task<ResponseModel<LivroDto>> BuscarLivroPorId(int idLivro)
         {
-            ResponseModel<LivroModel> resposta = new ResponseModel<LivroModel>();
+            ResponseModel<LivroDto> resposta = new ResponseModel<LivroDto>();
 
             try
             {
@@ -31,8 +36,9 @@ namespace autorlivrosapi.services.livro
                     resposta.Mensagem = "Nenhum registro localizado";
                     return resposta;
                 }
-                resposta.Dados = livro;
-                resposta.Mensagem = "Autor localizado";
+               
+                resposta.Dados = _mapper.Map<LivroDto>(livro);
+                resposta.Mensagem = "Livro localizado";
 
                 return resposta;
 
@@ -47,19 +53,15 @@ namespace autorlivrosapi.services.livro
 
         }
 
-        public async Task<ResponseModel<List<LivroModel>>> BuscarLivroPorIdAutor(int idAutor)
+        public async Task<ResponseModel<List<LivroDto>>> BuscarLivroPorIdAutor(int idAutor)
         {
-            ResponseModel<List<LivroModel>> resposta = new ResponseModel<List<LivroModel>>();
+            ResponseModel<List<LivroDto>> resposta = new ResponseModel<List<LivroDto>>();
             try
             {
-                //var livro = await _context.Livros
-                //    .Include(a => a.Autor)
-                //    .Where(livroBanco => livroBanco.Autor.Id == idAutor)
-                //    .ToListAsync();
-
+               
                 var livro = await _context.Livros
-                    .Include(l => l.Autor) // Inclui o autor relacionado
-                    .Where(l => l.Autor.Id == idAutor) // Filtra pelo autor relacionado
+                    .Include(a => a.Autor) // Inclui o autor relacionado
+                    .Where(a => a.Autor.Id == idAutor) // Filtra pelo autor relacionado
                     .ToListAsync();
 
                 if (livro == null)
@@ -68,7 +70,7 @@ namespace autorlivrosapi.services.livro
                     return resposta;
                 }
 
-                resposta.Dados = livro;
+                resposta.Dados = _mapper.Map<List<LivroDto>>(livro);  // Usando o AutoMapper para mapear os modelos
                 resposta.Mensagem = "Livros Localizados!";
                 return resposta;
 
@@ -204,24 +206,34 @@ namespace autorlivrosapi.services.livro
         }
 
 
-        public async Task<ResponseModel<List<LivroModel>>> ListarLivros()
+        public async Task<ResponseModel<List<LivroDto>>> ListarLivros()
         {
-            ResponseModel<List<LivroModel>> resposta = new ResponseModel<List<LivroModel>>();
+            ResponseModel<List<LivroDto>> resposta = new ResponseModel<List<LivroDto>>();
+
             try
             {
-
+                
                 var livros = await _context.Livros.Include(l => l.Autor).ToListAsync();
 
-                resposta.Dados = livros;
+                // Verifique se os livros existem
+                if (livros == null)
+                {
+                    resposta.Dados = null;
+                    resposta.Mensagem = "Nenhum livro encontrado!";
+                    resposta.Status = false;
+                    return resposta;  // Retorna a resposta com dados nulos
+                }
+
+                // Mapeia os livros de LivroModel para LivroDto
+                resposta.Dados = _mapper.Map<List<LivroDto>>(livros);  // Mapeamento dos modelos para DTO
                 resposta.Mensagem = "Todos os livros foram coletados!";
-
+                resposta.Status = true;
                 return resposta;
-
             }
             catch (Exception ex)
             {
                 resposta.Mensagem = ex.Message;
-                resposta.Status = false;
+                resposta.Status = false; 
                 return resposta;
             }
         }

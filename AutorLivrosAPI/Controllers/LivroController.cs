@@ -14,20 +14,23 @@ namespace AutorLivrosAPI.Controllers
     public class LivroController : ControllerBase
     {
         private readonly ILivroInterface _livroInterface;
+        
 
         public LivroController(ILivroInterface livroInterface)
         {
             _livroInterface = livroInterface;
+    
         }
 
         [HttpGet("ListarLivros")]
 
-        public async Task<ActionResult<ResponseModel<LivroModel>>> ListarLivros()
+        public async Task<ActionResult<ResponseModel<LivroDto>>> ListarLivros()
 
         {
 
             var livros = await _livroInterface.ListarLivros();
             return Ok (livros);
+                
         }
 
         [HttpGet("BuscarLivroPorId/{idLivro}")]

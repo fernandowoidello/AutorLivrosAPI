@@ -17,6 +17,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAutorInterface, AutorService>();
 builder.Services.AddScoped<ILivroInterface, LivroService>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
 
 // Obtém a string de conexão do arquivo de configuração.
 builder.Services.AddDbContext<AppDbContext>(options =>
