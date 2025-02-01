@@ -8,9 +8,9 @@ namespace AutorLivrosAPI.Mapping
     {
         public AutorProfile()
         {
+            // Mapeamento para criação e edição do autor
             CreateMap<AutorCriacaoDto, AutorModel>();
             CreateMap<AutorEdicaoDto, AutorModel>();
-            CreateMap<AutorModel, AutorDto>();
         }
     }
 }
